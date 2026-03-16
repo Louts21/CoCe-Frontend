@@ -1,5 +1,6 @@
 import { useState } from "react"
 import type { CarEngine, CarExtra, CarModel, CarPaint, CarWheel, Configuration } from "./interfaces";
+import type { C } from "node_modules/react-router/dist/development/router-5iOvts3c.mjs";
 
 
 // TODO: Fetch car configuration options from backend
@@ -34,16 +35,42 @@ export function Configuration() {
         id: "f175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "Heat",
         price: 256
+    }, {
+        id: "g175d83d-09d9-405b-950a-49cc0a6e5ac2",
+        name: "Air Conditioning",
+        price: 256
+    }, {
+        id: "h175d83d-09d9-405b-950a-49cc0a6e5ac2",
+        name: "Sunroof",
+        price: 256
+    }, {
+        id: "i175d83d-09d9-405b-950a-49cc0a6e5ac2",
+        name: "Leather Seats",
+        price: 256
+    }, {
+        id: "j175d83d-09d9-405b-950a-49cc0a6e5ac2",
+        name: "Navigation System",
+        price: 256
+    }, {
+        id: "k175d83d-09d9-405b-950a-49cc0a6e5ac2",
+        name: "Premium Sound System",
+        price: 256
     }];
 
     const [configuration, setConfiguration] = useState<Configuration>({
         id: "g175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        carModel: carModels[0], carEngine: carEngines[0], carPaint: carPaints[0], carWheel: carWheels[0], carExtra: carExtras[0],
-        totalPrice: carModels[0].price + carEngines[0].price + carPaints[0].price + carWheels[0].price + carExtras[0].price
+        carModel: carModels[0], carEngine: carEngines[0], carPaint: carPaints[0], carWheel: carWheels[0], carExtra: [],
+        totalPrice: carModels[0].price + carEngines[0].price + carPaints[0].price + carWheels[0].price
     });
 
     function handleClick() {
         alert('Not yet!');
+    }
+    function isCarExtraAlreadySelected(extra: CarExtra) {
+        return configuration.carExtra.some(e => e.id === extra.id);
+    }
+    function isCarExtraUnderFive(configuration: Configuration) {
+        return configuration.carExtra.length < 5;
     }
 
     return (
@@ -55,66 +82,82 @@ export function Configuration() {
                     <select value={configuration.carModel.name} onChange={e => setConfiguration({
                         ...configuration,
                         carModel: carModels.find(model => model.name === e.target.value) || carModels[0],
-                        totalPrice: (carModels.find(model => model.name === e.target.value) || carModels[0]).price + configuration.carEngine.price + configuration.carPaint.price + configuration.carWheel.price + configuration.carExtra.price
+                        totalPrice: (carModels.find(model => model.name === e.target.value) || carModels[0]).price + configuration.carEngine.price + configuration.carPaint.price + configuration.carWheel.price + configuration.carExtra.reduce((sum, e) => sum + e.price, 0)
                     })}>
                         {carModels.map(model => (
                             <option key={model.id} value={model.name}>{model.name} - {model.price}€</option>
                         ))}
                     </select>
                 </label>
-                <hr/>
+                <hr />
                 <label>
                     Engine:
                     <select value={configuration.carEngine.name} onChange={e => setConfiguration({
                         ...configuration,
                         carEngine: carEngines.find(engine => engine.name === e.target.value) || carEngines[0],
-                        totalPrice: configuration.carModel.price + (carEngines.find(engine => engine.name === e.target.value) || carEngines[0]).price + configuration.carPaint.price + configuration.carWheel.price + configuration.carExtra.price
+                        totalPrice: configuration.carModel.price + (carEngines.find(engine => engine.name === e.target.value) || carEngines[0]).price + configuration.carPaint.price + configuration.carWheel.price + configuration.carExtra.reduce((sum, e) => sum + e.price, 0)
                     })}>
                         {carEngines.map(engine => (
                             <option key={engine.id} value={engine.name}>{engine.name} - {engine.price}€</option>
                         ))}
                     </select>
                 </label>
-                <hr/>
+                <hr />
                 <label>
                     Paint:
                     <select value={configuration.carPaint.name} onChange={e => setConfiguration({
                         ...configuration,
                         carPaint: carPaints.find(paint => paint.name === e.target.value) || carPaints[0],
-                        totalPrice: configuration.carModel.price + configuration.carEngine.price + (carPaints.find(paint => paint.name === e.target.value) || carPaints[0]).price + configuration.carWheel.price + configuration.carExtra.price
+                        totalPrice: configuration.carModel.price + configuration.carEngine.price + (carPaints.find(paint => paint.name === e.target.value) || carPaints[0]).price + configuration.carWheel.price + configuration.carExtra.reduce((sum, e) => sum + e.price, 0)
                     })}>
                         {carPaints.map(paint => (
                             <option key={paint.id} value={paint.name}>{paint.name} - {paint.price}€</option>
                         ))}
                     </select>
                 </label>
-                <hr/>
+                <hr />
                 <label>
                     Wheel:
                     <select value={configuration.carWheel.name} onChange={e => setConfiguration({
                         ...configuration,
                         carWheel: carWheels.find(wheel => wheel.name === e.target.value) || carWheels[0],
-                        totalPrice: configuration.carModel.price + configuration.carEngine.price + configuration.carPaint.price + (carWheels.find(wheel => wheel.name === e.target.value) || carWheels[0]).price + configuration.carExtra.price
+                        totalPrice: configuration.carModel.price + configuration.carEngine.price + configuration.carPaint.price + (carWheels.find(wheel => wheel.name === e.target.value) || carWheels[0]).price + configuration.carExtra.reduce((sum, e) => sum + e.price, 0)
                     })}>
                         {carWheels.map(wheel => (
                             <option key={wheel.id} value={wheel.name}>{wheel.name} - {wheel.price}€</option>
                         ))}
                     </select>
                 </label>
-                <hr/>
+                <hr />
                 <label>
                     Extra:
-                    <select value={configuration.carExtra.name} onChange={e => setConfiguration({
-                        ...configuration,
-                        carExtra: carExtras.find(extra => extra.name === e.target.value) || carExtras[0],
-                        totalPrice: configuration.carModel.price + configuration.carEngine.price + configuration.carPaint.price + configuration.carWheel.price + (carExtras.find(extra => extra.name === e.target.value) || carExtras[0]).price
-                    })}>
-                        {carExtras.map(extra => (
-                            <option key={extra.id} value={extra.name}>{extra.name} - {extra.price}€</option>
-                        ))}
-                    </select>
+                    {carExtras.map(extra => (
+                        <div key={extra.id}>
+                            <input
+                                type="checkbox"
+                                checked={isCarExtraAlreadySelected(extra)}
+                                onChange={e => {
+                                    if (!isCarExtraUnderFive(configuration) && e.target.checked) {
+                                        alert('You can only select up to 5 extras!');
+                                        return;
+                                    }
+                                    else {
+                                        const newExtras = e.target.checked
+                                            ? [...configuration.carExtra, extra]
+                                            : configuration.carExtra.filter(e => e.id !== extra.id);
+                                        setConfiguration({
+                                            ...configuration,
+                                            carExtra: newExtras,
+                                            totalPrice: configuration.carModel.price + configuration.carEngine.price + configuration.carPaint.price + configuration.carWheel.price + newExtras.reduce((sum, e) => sum + e.price, 0)
+                                        });
+                                    }
+                                }}
+                            />
+                            {extra.name} - {extra.price}€
+                        </div>
+                    ))}
                 </label>
-                <hr/>
+                <hr />
                 <p>Der Gesamtpreis beträgt: {configuration.totalPrice}€</p>
                 <button type="submit" onClick={handleClick}>Bestellen</button>
             </form>

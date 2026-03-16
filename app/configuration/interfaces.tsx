@@ -32,7 +32,7 @@ export interface Configuration {
     carEngine: CarEngine,
     carPaint: CarPaint,
     carWheel: CarWheel,
-    carExtra: CarExtra,
+    carExtra: CarExtra[],
     totalPrice: number
 }
 
