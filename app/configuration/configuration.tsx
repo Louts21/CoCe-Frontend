@@ -7,36 +7,37 @@ import type { CarEngine, CarExtra, CarModel, CarPaint, CarWheel, Configuration }
 // TODO: Enable routing to a summary page, where the configuration can be reviewed and ordered
 export function Configuration() {
     const carModels: CarModel[] = [{
-        id: 1,
+        id: "a175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "CS1",
         price: 23
     }];
     const carEngines: CarEngine[] = [{
-        id: 1,
+        id: "b175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "Lieblich",
         price: 25
     }];
     const carPaints: CarPaint[] = [{
-        id: 1,
+        id: "c175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "Green",
         price: 256
     }];
     const carWheels: CarWheel[] = [{
-        id: 1,
+        id: "d175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "Round",
         price: 2
     }, {
-        id: 2,
+        id: "e175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "Square",
         price: 3
     }];
     const carExtras: CarExtra[] = [{
-        id: 1,
+        id: "f175d83d-09d9-405b-950a-49cc0a6e5ac2",
         name: "Heat",
         price: 256
     }];
 
     const [configuration, setConfiguration] = useState<Configuration>({
+        id: "g175d83d-09d9-405b-950a-49cc0a6e5ac2",
         carModel: carModels[0], carEngine: carEngines[0], carPaint: carPaints[0], carWheel: carWheels[0], carExtra: carExtras[0],
         totalPrice: carModels[0].price + carEngines[0].price + carPaints[0].price + carWheels[0].price + carExtras[0].price
     });

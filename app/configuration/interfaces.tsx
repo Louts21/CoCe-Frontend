@@ -1,30 +1,33 @@
+import type { UUID } from "crypto"
+
 export interface CarModel {
-    id: number,
+    id: UUID,
     name: string,
     price: number
 }
 export interface CarEngine {
-    id: number,
+    id: UUID,
     name: string,
     price: number
 }
 export interface CarPaint {
-    id: number,
+    id: UUID,
     name: string,
     price: number
 }
 export interface CarWheel {
-    id: number,
+    id: UUID,
     name: string,
     price: number
 }
 export interface CarExtra {
-    id: number,
+    id: UUID,
     name: string,
     price: number
 }
 
 export interface Configuration {
+    id: UUID,
     carModel: CarModel,
     carEngine: CarEngine,
     carPaint: CarPaint,
@@ -34,6 +37,6 @@ export interface Configuration {
 }
 
 export interface Order {
-    configuration: Configuration,
-    totalPrice: number
+    id: UUID,
+    configuration: Configuration
 }
