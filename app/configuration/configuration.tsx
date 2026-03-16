@@ -2,6 +2,9 @@ import { useState } from "react"
 import type { CarEngine, CarExtra, CarModel, CarPaint, CarWheel, Configuration } from "./interfaces";
 
 
+// TODO: Fetch car configuration options from backend
+// TODO: URL system needs to be implemented, so that the configuration can be shared
+// TODO: Enable routing to a summary page, where the configuration can be reviewed and ordered
 export function Configuration() {
     const carModels: CarModel[] = [{
         id: 1,
