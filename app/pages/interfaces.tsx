@@ -28,15 +28,15 @@ export interface CarExtra {
 
 export interface Configuration {
     id: UUID,
-    carModel: CarModel,
-    carEngine: CarEngine,
-    carPaint: CarPaint,
-    carWheel: CarWheel,
-    carExtra: CarExtra[],
+    carModelDTO: CarModel,
+    carEngineDTO: CarEngine,
+    carPaintDTO: CarPaint,
+    carWheelDTO: CarWheel,
+    carExtraDTOs: CarExtra[],
     totalPrice: number
 }
 
 export interface Order {
     id: UUID,
-    configuration: Configuration
+    configurationDTO: Configuration
 }
