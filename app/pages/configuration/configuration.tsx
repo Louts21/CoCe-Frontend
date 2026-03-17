@@ -5,10 +5,10 @@ import axios from "axios";
 
 // TODO: Fetch car configuration options from backend
 // TODO: URL system needs to be implemented, so that the configuration can be shared
-// TODO: Enable routing to a summary page, where the configuration can be reviewed and ordered
+// TODO: Enable routing to a summary page, where the configuration can be reviewed
 export function Configuration() {
     const instance = axios.create({
-        baseURL: 'http://localhost:8080/api/v1',
+        baseURL: 'http://localhost:8080/api',
         timeout: 1000,
         headers: { 'Content-Type': 'application/json' }
     });
@@ -64,7 +64,7 @@ export function Configuration() {
     }];
 
     const [configuration, setConfiguration] = useState<Configuration>({
-        id: "g175d83d-09d9-405b-950a-49cc0a6e5ac2",
+        id: crypto.randomUUID(),
         carModelDTO: carModels[0], carEngineDTO: carEngines[0], carPaintDTO: carPaints[0], carWheelDTO: carWheels[0], carExtraDTOs: [],
         totalPrice: carModels[0].price + carEngines[0].price + carPaints[0].price + carWheels[0].price
     });
@@ -77,20 +77,19 @@ export function Configuration() {
     }
     function postOrder() {
         const order: Order = {
-            id: "h175d83d-09d9-405b-950a-49cc0a6e5ac2",
-            configurationDTO: configuration
+            id: crypto.randomUUID(),
+            configurationDTO: configuration,
+            url: ""
         };
         
         instance({
             method: "post",
             url: "/order",
             data: order
-        }).then(response => {
+        }).then(() => {
             alert('Order placed successfully!');
-            console.log(response.data);
-        }).catch(error => {
+        }).catch(() => {
             alert('Failed to place order!');
-            console.error(error);
         });
     }
 

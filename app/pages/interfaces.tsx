@@ -38,5 +38,6 @@ export interface Configuration {
 
 export interface Order {
     id: UUID,
-    configurationDTO: Configuration
+    configurationDTO: Configuration,
+    url: string
 }
