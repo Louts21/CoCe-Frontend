@@ -18,13 +18,13 @@ export default function Order() {
             <h1 className="text-2xl font-bold">Deine Bestellung</h1>
             <p>Order ID: {data.id}</p>
             <hr />
-            <p>Model: {data.configurationDTO.carModelDTO.name}, {data.configurationDTO.carModelDTO.price}€</p>
-            <p>Engine: {data.configurationDTO.carEngineDTO.name}, {data.configurationDTO.carEngineDTO.price}€</p>
-            <p>Paint: {data.configurationDTO.carPaintDTO.name}, {data.configurationDTO.carPaintDTO.price}€</p>
-            <p>Wheel: {data.configurationDTO.carWheelDTO.name}, {data.configurationDTO.carWheelDTO.price}€</p>
-            <p>Extras: {data.configurationDTO.carExtraDTOs.map(extra => `${extra.name} (${extra.price}€)`).join(", ")}</p>
+            <p>Model: {data.car.carModelDTO.name}, {data.car.carModelDTO.price}€</p>
+            <p>Engine: {data.car.carEngineDTO.name}, {data.car.carEngineDTO.price}€</p>
+            <p>Paint: {data.car.carPaintDTO.name}, {data.car.carPaintDTO.price}€</p>
+            <p>Wheel: {data.car.carWheelDTO.name}, {data.car.carWheelDTO.price}€</p>
+            <p>Extras: {data.car.carExtraDTOs.map(extra => `${extra.name} (${extra.price}€)`).join(", ")}</p>
             <hr />
-            <p>Total Price: {data.configurationDTO.totalPrice}€</p>
+            <p>Total Price: {data.car.totalPrice}€</p>
         </div>
     );
 }

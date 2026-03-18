@@ -26,7 +26,7 @@ export interface CarExtra {
     price: number
 }
 
-export interface Configuration {
+export interface Car {
     id: UUID,
     carModelDTO: CarModel,
     carEngineDTO: CarEngine,
@@ -38,6 +38,6 @@ export interface Configuration {
 
 export interface Order {
     id: UUID,
-    configurationDTO: Configuration,
+    car: Car,
     url: string
 }
