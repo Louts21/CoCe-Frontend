@@ -37,11 +37,11 @@ export interface Car {
 }
 
 export interface Configuration {
-    carModelDTOs: CarModel[],
-    carEngineDTOs: CarEngine[],
-    carPaintDTOs: CarPaint[],
-    carWheelDTOs: CarWheel[],
-    carExtraDTOs: CarExtra[]
+    carModelDTO: CarModel[],
+    carEngineDTO: CarEngine[],
+    carPaintDTO: CarPaint[],
+    carWheelDTO: CarWheel[],
+    carExtraDTO: CarExtra[]
 }
 
 export interface Order {
