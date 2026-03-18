@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { Car, CarEngine, CarExtra, CarModel, CarPaint, CarWheel, Configuration, Order } from "../interfaces";
 import axios from "axios";
 import { NavLink } from "react-router";
@@ -9,74 +9,40 @@ import { NavLink } from "react-router";
 export function Configuration() {
     const instance = axios.create({
         baseURL: 'http://localhost:8080/api',
-        timeout: 1000,
+        timeout: 3000,
         headers: { 'Content-Type': 'application/json' }
     });
 
-    const carModels: CarModel[] = [{
-        id: "a175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "CS1",
-        price: 23
-    }];
-    const carEngines: CarEngine[] = [{
-        id: "b175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Lieblich",
-        price: 25
-    }];
-    const carPaints: CarPaint[] = [{
-        id: "c175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Green",
-        price: 256
-    }];
-    const carWheels: CarWheel[] = [{
-        id: "d175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Round",
-        price: 2
-    }, {
-        id: "e175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Square",
-        price: 3
-    }];
-    const carExtras: CarExtra[] = [{
-        id: "f175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Heat",
-        price: 256
-    }, {
-        id: "g175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Air Conditioning",
-        price: 256
-    }, {
-        id: "h175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Sunroof",
-        price: 256
-    }, {
-        id: "i175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Leather Seats",
-        price: 256
-    }, {
-        id: "j175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Navigation System",
-        price: 256
-    }, {
-        id: "k175d83d-09d9-405b-950a-49cc0a6e5ac2",
-        name: "Premium Sound System",
-        price: 256
-    }];
-    const configuration: Configuration = {
-        id: crypto.randomUUID(),
+    let carModels: CarModel[] = [];
+    let carEngines: CarEngine[] = [];
+    let carPaints: CarPaint[] = [];
+    let carWheels: CarWheel[] = [];
+    let carExtras: CarExtra[] = [];
+    const [configuration, setConfiguration] = useState<Configuration>({
         carModelDTOs: carModels,
         carEngineDTOs: carEngines,
         carPaintDTOs: carPaints,
         carWheelDTOs: carWheels,
         carExtraDTOs: carExtras
-    };
+    });
+
+    useEffect(() => {
+        instance.get('/configuration').then(response => {
+            const configData = response.data as Configuration;
+            setConfiguration(configData);
+        });
+    }, []);
 
     const [car, setCar] = useState<Car>({
         id: crypto.randomUUID(),
-        carModelDTO: configuration.carModelDTOs[0], carEngineDTO: configuration.carEngineDTOs[0], carPaintDTO: configuration.carPaintDTOs[0], carWheelDTO: configuration.carWheelDTOs[0], carExtraDTOs: [],
-        totalPrice: configuration.carModelDTOs[0].price + configuration.carEngineDTOs[0].price + configuration.carPaintDTOs[0].price + configuration.carWheelDTOs[0].price
+        carModelDTO: configuration.carModelDTOs[0] || { id: "1", name: "", price: 0 }, 
+        carEngineDTO: configuration.carEngineDTOs[0] || { id: "1", name: "", price: 0 }, 
+        carPaintDTO: configuration.carPaintDTOs[0] || { id: "1", name: "", price: 0 }, 
+        carWheelDTO: configuration.carWheelDTOs[0] || { id: "1", name: "", price: 0 }, 
+        carExtraDTOs: [],
+        totalPrice: 0
     });
-    let [order, setOrder] = useState<Order>({
+    const [order, setOrder] = useState<Order>({
         id: crypto.randomUUID(),
         car: car,
         url: ""
@@ -88,16 +54,16 @@ export function Configuration() {
     function isCarExtraUnderFive(configuration: Car) {
         return configuration.carExtraDTOs.length < 5;
     }
-    function postOrder() {        
+    function postOrder() {
         instance({
             method: "post",
             url: "/order",
             data: order
         }).then(response => {
             setOrder(response.data as Order);
-            alert("Order placed successfully! Your order ID is: " + order.id);
-        }).catch(error => {
-            alert("Failed to place order: " + error.message);
+            alert("Order placed successfully!");
+        }).catch(() => {
+            alert("Failed to place order!");
         });
     }
 
@@ -189,7 +155,7 @@ export function Configuration() {
             </form>
             <p>Der Gesamtpreis beträgt: {car.totalPrice}€</p>
             <button type="submit" onClick={postOrder}>Bestellen</button>
-            <a/>
+            <a />
             {order.url.length > 0 &&
                 <div>
                     <NavLink to={order.url} className="text-blue-500 underline">Bestellung ansehen</NavLink>
