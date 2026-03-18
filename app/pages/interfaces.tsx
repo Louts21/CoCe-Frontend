@@ -36,6 +36,15 @@ export interface Car {
     totalPrice: number
 }
 
+export interface Configuration {
+    id: UUID,
+    carModelDTOs: CarModel[],
+    carEngineDTOs: CarEngine[],
+    carPaintDTOs: CarPaint[],
+    carWheelDTOs: CarWheel[],
+    carExtraDTOs: CarExtra[]
+}
+
 export interface Order {
     id: UUID,
     car: Car,

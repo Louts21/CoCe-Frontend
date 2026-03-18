@@ -16,15 +16,15 @@ export default function Order() {
     return (
         <div className="flex flex-col items-center justify-center gap-4">
             <h1 className="text-2xl font-bold">Deine Bestellung</h1>
-            <p>Order ID: {data.id}</p>
+            <p>Bestell-ID: {data.id}</p>
             <hr />
-            <p>Model: {data.car.carModelDTO.name}, {data.car.carModelDTO.price}€</p>
-            <p>Engine: {data.car.carEngineDTO.name}, {data.car.carEngineDTO.price}€</p>
-            <p>Paint: {data.car.carPaintDTO.name}, {data.car.carPaintDTO.price}€</p>
-            <p>Wheel: {data.car.carWheelDTO.name}, {data.car.carWheelDTO.price}€</p>
-            <p>Extras: {data.car.carExtraDTOs.map(extra => `${extra.name} (${extra.price}€)`).join(", ")}</p>
+            <p>Modell: {data.car.carModelDTO.name} - {data.car.carModelDTO.price}€</p>
+            <p>Motorleistung: {data.car.carEngineDTO.name} - {data.car.carEngineDTO.price}€</p>
+            <p>Lackierung: {data.car.carPaintDTO.name} - {data.car.carPaintDTO.price}€</p>
+            <p>Felgen: {data.car.carWheelDTO.name} - {data.car.carWheelDTO.price}€</p>
+            <p>Sonderaustattungen: {data.car.carExtraDTOs.map(extra => `${extra.name} (${extra.price}€)`).join(", ")}</p>
             <hr />
-            <p>Total Price: {data.car.totalPrice}€</p>
+            <p>Gesamtpreis: {data.car.totalPrice}€</p>
         </div>
     );
 }
