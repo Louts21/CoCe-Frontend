@@ -4,7 +4,6 @@ import axios from "axios";
 import { NavLink } from "react-router";
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/api',
     timeout: 3000,
     headers: { 'Content-Type': 'application/json' }
 });
@@ -32,7 +31,7 @@ export function Configuration() {
     });
 
     useEffect(() => {
-        instance.get('/configuration').then(response => {
+        instance.get('http://localhost:8080/api/configuration').then(response => {
             const configData = response.data as Configuration;
             setConfiguration(configData);
             setCar(prev => ({
@@ -59,7 +58,7 @@ export function Configuration() {
     function postOrder() {
         instance({
             method: "post",
-            url: "/order",
+            url: "http://localhost:8081/api/order",
             data: order
         }).then(response => {
             setOrder(response.data as Order);

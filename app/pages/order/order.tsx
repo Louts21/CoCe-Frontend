@@ -34,7 +34,7 @@ export async function loader({ params }: { params: Record<string, string> }) {
     if (!id) return null;
 
     const instance = axios.create({
-        baseURL: 'http://localhost:8080/api',
+        baseURL: 'http://localhost:8081/api',
         timeout: 3000,
         headers: { 'Content-Type': 'application/json' }
     });
