@@ -1,44 +1,27 @@
 import { useEffect, useState } from "react"
-import type { Car, CarEngine, CarExtra, CarModel, CarPaint, CarWheel, Configuration, Order } from "../interfaces";
+import type { Car, CarExtra, Configuration, Order } from "../interfaces";
 import axios from "axios";
 import { NavLink } from "react-router";
 
+const instance = axios.create({
+    baseURL: 'http://localhost:8080/api',
+    timeout: 3000,
+    headers: { 'Content-Type': 'application/json' }
+});
 
-// TODO: Fetch car configuration options from backend
-// TODO: Make some parameters dynamic via enviroment variables (e.g. backend URL)
+// TODO: Make some parameters dynamic via environment variables (e.g. backend URL)
 export function Configuration() {
-    const instance = axios.create({
-        baseURL: 'http://localhost:8080/api',
-        timeout: 3000,
-        headers: { 'Content-Type': 'application/json' }
-    });
 
-    let carModels: CarModel[] = [];
-    let carEngines: CarEngine[] = [];
-    let carPaints: CarPaint[] = [];
-    let carWheels: CarWheel[] = [];
-    let carExtras: CarExtra[] = [];
-    const [configuration, setConfiguration] = useState<Configuration>({
-        carModelDTOs: carModels,
-        carEngineDTOs: carEngines,
-        carPaintDTOs: carPaints,
-        carWheelDTOs: carWheels,
-        carExtraDTOs: carExtras
-    });
-
-    useEffect(() => {
-        instance.get('/configuration').then(response => {
-            const configData = response.data as Configuration;
-            setConfiguration(configData);
-        });
-    }, []);
+    const [configuration, setConfiguration] = useState<Configuration | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
 
     const [car, setCar] = useState<Car>({
         id: crypto.randomUUID(),
-        carModelDTO: configuration.carModelDTOs[0] || { id: "1", name: "", price: 0 }, 
-        carEngineDTO: configuration.carEngineDTOs[0] || { id: "1", name: "", price: 0 }, 
-        carPaintDTO: configuration.carPaintDTOs[0] || { id: "1", name: "", price: 0 }, 
-        carWheelDTO: configuration.carWheelDTOs[0] || { id: "1", name: "", price: 0 }, 
+        carModelDTO: { id: "", name: "", price: 0 },
+        carEngineDTO: { id: "", name: "", price: 0 },
+        carPaintDTO: { id: "", name: "", price: 0 },
+        carWheelDTO: { id: "", name: "", price: 0 },
         carExtraDTOs: [],
         totalPrice: 0
     });
@@ -47,6 +30,25 @@ export function Configuration() {
         car: car,
         url: ""
     });
+
+    useEffect(() => {
+        instance.get('/configuration').then(response => {
+            const configData = response.data as Configuration;
+            setConfiguration(configData);
+            setCar(prev => ({
+                ...prev,
+                carModelDTO: configData.carModelDTO[0] ?? prev.carModelDTO,
+                carEngineDTO: configData.carEngineDTO[0] ?? prev.carEngineDTO,
+                carPaintDTO: configData.carPaintDTO[0] ?? prev.carPaintDTO,
+                carWheelDTO: configData.carWheelDTO[0] ?? prev.carWheelDTO,
+                totalPrice: (configData.carModelDTO[0]?.price ?? 0) + (configData.carEngineDTO[0]?.price ?? 0) + (configData.carPaintDTO[0]?.price ?? 0) + (configData.carWheelDTO[0]?.price ?? 0)
+            }));
+            setIsLoading(false);
+        }).catch(() => {
+            setIsError(true);
+            setIsLoading(false);
+        });
+    }, []);
 
     function isCarExtraAlreadySelected(extra: CarExtra) {
         return car.carExtraDTOs.some(e => e.id === extra.id);
@@ -67,6 +69,24 @@ export function Configuration() {
         });
     }
 
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center gap-4">
+                <h1 className="text-2xl font-bold">Powerconfigurator</h1>
+                <p>Konfigurationsdaten werden geladen...</p>
+            </div>
+        );
+    }
+
+    if (isError || !configuration) {
+        return (
+            <div className="flex flex-col items-center justify-center gap-4">
+                <h1 className="text-2xl font-bold">Powerconfigurator</h1>
+                <p className="text-red-500">API nicht erreichbar. Bitte versuche es später erneut.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col items-center justify-center gap-4">
             <h1 className="text-2xl font-bold">Powerconfigurator</h1>
@@ -75,10 +95,10 @@ export function Configuration() {
                     Modell:
                     <select value={car.carModelDTO.name} onChange={e => setCar({
                         ...car,
-                        carModelDTO: configuration.carModelDTOs.find(model => model.name === e.target.value) || configuration.carModelDTOs[0],
-                        totalPrice: (configuration.carModelDTOs.find(model => model.name === e.target.value) || configuration.carModelDTOs[0]).price + car.carEngineDTO.price + car.carPaintDTO.price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
+                        carModelDTO: configuration.carModelDTO.find(model => model.name === e.target.value) || configuration.carModelDTO[0],
+                        totalPrice: (configuration.carModelDTO.find(model => model.name === e.target.value) || configuration.carModelDTO[0]).price + car.carEngineDTO.price + car.carPaintDTO.price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                     })}>
-                        {configuration.carModelDTOs.map(model => (
+                        {configuration.carModelDTO.map(model => (
                             <option key={model.id} value={model.name}>{model.name} - {model.price}€</option>
                         ))}
                     </select>
@@ -88,10 +108,10 @@ export function Configuration() {
                     Motorleistung:
                     <select value={car.carEngineDTO.name} onChange={e => setCar({
                         ...car,
-                        carEngineDTO: configuration.carEngineDTOs.find(engine => engine.name === e.target.value) || configuration.carEngineDTOs[0],
-                        totalPrice: car.carModelDTO.price + (configuration.carEngineDTOs.find(engine => engine.name === e.target.value) || configuration.carEngineDTOs[0]).price + car.carPaintDTO.price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
+                        carEngineDTO: configuration.carEngineDTO.find(engine => engine.name === e.target.value) || configuration.carEngineDTO[0],
+                        totalPrice: car.carModelDTO.price + (configuration.carEngineDTO.find(engine => engine.name === e.target.value) || configuration.carEngineDTO[0]).price + car.carPaintDTO.price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                     })}>
-                        {configuration.carEngineDTOs.map(engine => (
+                        {configuration.carEngineDTO.map(engine => (
                             <option key={engine.id} value={engine.name}>{engine.name} - {engine.price}€</option>
                         ))}
                     </select>
@@ -101,10 +121,10 @@ export function Configuration() {
                     Lackierung:
                     <select value={car.carPaintDTO.name} onChange={e => setCar({
                         ...car,
-                        carPaintDTO: configuration.carPaintDTOs.find(paint => paint.name === e.target.value) || configuration.carPaintDTOs[0],
-                        totalPrice: car.carModelDTO.price + car.carEngineDTO.price + (configuration.carPaintDTOs.find(paint => paint.name === e.target.value) || configuration.carPaintDTOs[0]).price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
+                        carPaintDTO: configuration.carPaintDTO.find(paint => paint.name === e.target.value) || configuration.carPaintDTO[0],
+                        totalPrice: car.carModelDTO.price + car.carEngineDTO.price + (configuration.carPaintDTO.find(paint => paint.name === e.target.value) || configuration.carPaintDTO[0]).price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                     })}>
-                        {configuration.carPaintDTOs.map(paint => (
+                        {configuration.carPaintDTO.map(paint => (
                             <option key={paint.id} value={paint.name}>{paint.name} - {paint.price}€</option>
                         ))}
                     </select>
@@ -114,10 +134,10 @@ export function Configuration() {
                     Felgen:
                     <select value={car.carWheelDTO.name} onChange={e => setCar({
                         ...car,
-                        carWheelDTO: configuration.carWheelDTOs.find(wheel => wheel.name === e.target.value) || configuration.carWheelDTOs[0],
-                        totalPrice: car.carModelDTO.price + car.carEngineDTO.price + car.carPaintDTO.price + (configuration.carWheelDTOs.find(wheel => wheel.name === e.target.value) || configuration.carWheelDTOs[0]).price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
+                        carWheelDTO: configuration.carWheelDTO.find(wheel => wheel.name === e.target.value) || configuration.carWheelDTO[0],
+                        totalPrice: car.carModelDTO.price + car.carEngineDTO.price + car.carPaintDTO.price + (configuration.carWheelDTO.find(wheel => wheel.name === e.target.value) || configuration.carWheelDTO[0]).price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                     })}>
-                        {configuration.carWheelDTOs.map(wheel => (
+                        {configuration.carWheelDTO.map(wheel => (
                             <option key={wheel.id} value={wheel.name}>{wheel.name} - {wheel.price}€</option>
                         ))}
                     </select>
@@ -125,7 +145,7 @@ export function Configuration() {
                 <hr />
                 <label>
                     Sonderaustattungen:
-                    {configuration.carExtraDTOs.map(extra => (
+                    {configuration.carExtraDTO.map(extra => (
                         <div key={extra.id}>
                             <input
                                 type="checkbox"
