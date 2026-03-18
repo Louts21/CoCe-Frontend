@@ -1,27 +1,27 @@
 import type { UUID } from "crypto"
 
 export interface CarModel {
-    id: UUID,
+    id: string,
     name: string,
     price: number
 }
 export interface CarEngine {
-    id: UUID,
+    id: string,
     name: string,
     price: number
 }
 export interface CarPaint {
-    id: UUID,
+    id: string,
     name: string,
     price: number
 }
 export interface CarWheel {
-    id: UUID,
+    id: string,
     name: string,
     price: number
 }
 export interface CarExtra {
-    id: UUID,
+    id: string,
     name: string,
     price: number
 }
@@ -37,12 +37,11 @@ export interface Car {
 }
 
 export interface Configuration {
-    id: UUID,
-    carModelDTOs: CarModel[],
-    carEngineDTOs: CarEngine[],
-    carPaintDTOs: CarPaint[],
-    carWheelDTOs: CarWheel[],
-    carExtraDTOs: CarExtra[]
+    carModelDTO: CarModel[],
+    carEngineDTO: CarEngine[],
+    carPaintDTO: CarPaint[],
+    carWheelDTO: CarWheel[],
+    carExtraDTO: CarExtra[]
 }
 
 export interface Order {
