@@ -59,7 +59,7 @@ export function Configuration() {
         instance({
             method: "post",
             url: "http://localhost:8081/api/order",
-            data: order
+            data: { ...order, car: car }
         }).then(response => {
             setOrder(response.data as Order);
             alert("Order placed successfully!");
