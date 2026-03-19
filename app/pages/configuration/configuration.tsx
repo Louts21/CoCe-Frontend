@@ -8,7 +8,7 @@ const instance = axios.create({
     headers: { 'Content-Type': 'application/json' }
 });
 
-// TODO: Make some parameters dynamic via environment variables (e.g. backend URL)
+// TODO: To much code. Create components for repeated UI elements (e.g. model/engine/paint/wheel selection) to reduce code duplication and improve maintainability
 export function Configuration() {
 
     const [configuration, setConfiguration] = useState<Configuration | null>(null);
@@ -32,7 +32,7 @@ export function Configuration() {
     });
 
     useEffect(() => {
-        instance.get('http://localhost:8080/api/configuration').then(response => {
+        instance.get(`${import.meta.env.VITE_CONFIRMATION_URL}/api/configuration`).then(response => {
             const configData = response.data as Configuration;
             setConfiguration(configData);
             setCar(prev => ({
@@ -59,7 +59,7 @@ export function Configuration() {
     function postOrder() {
         instance({
             method: "post",
-            url: "http://localhost:8081/api/order",
+            url: `${import.meta.env.VITE_ORDER_URL}/api/order`,
             data: { ...order, car: car }
         }).then(response => {
             setOrder(response.data as Order);
