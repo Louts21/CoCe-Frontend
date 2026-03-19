@@ -147,7 +147,7 @@ export function Configuration() {
                                         carEngineDTO: engine,
                                         totalPrice: car.carModelDTO.price + engine.price + car.carPaintDTO.price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                                     })} />
-                                    <div className="font-semibold text-white"><span aria-hidden="true">⚡</span> {engine.name}</div>
+                                    <div className="font-semibold text-white">{engine.name}</div>
                                     <div className="text-red-400 font-bold mt-1">{engine.price.toLocaleString('de-DE')} €</div>
                                 </label>
                             ))}
@@ -168,7 +168,7 @@ export function Configuration() {
                                         carPaintDTO: paint,
                                         totalPrice: car.carModelDTO.price + car.carEngineDTO.price + paint.price + car.carWheelDTO.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                                     })} />
-                                    <div className="font-semibold text-white"><span aria-hidden="true">🎨</span> {paint.name}</div>
+                                    <div className="font-semibold text-white">{paint.name}</div>
                                     <div className="text-red-400 font-bold mt-1">{paint.price.toLocaleString('de-DE')} €</div>
                                 </label>
                             ))}
@@ -189,7 +189,7 @@ export function Configuration() {
                                         carWheelDTO: wheel,
                                         totalPrice: car.carModelDTO.price + car.carEngineDTO.price + car.carPaintDTO.price + wheel.price + car.carExtraDTOs.reduce((sum, e) => sum + e.price, 0)
                                     })} />
-                                    <div className="font-semibold text-white"><span aria-hidden="true">🔘</span> {wheel.name}</div>
+                                    <div className="font-semibold text-white">{wheel.name}</div>
                                     <div className="text-red-400 font-bold mt-1">{wheel.price.toLocaleString('de-DE')} €</div>
                                 </label>
                             ))}
