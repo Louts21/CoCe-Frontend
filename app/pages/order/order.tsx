@@ -1,10 +1,47 @@
-import { useLoaderData } from "react-router";
+import { useEffect, useState } from "react";
+import { useParams, NavLink } from "react-router";
 import type { Order } from "../interfaces";
 import axios from "axios";
-import { NavLink } from "react-router";
 
 export default function Order() {
-    const data = useLoaderData() as Order | null;
+    const { id } = useParams() as { id?: string };
+    const [data, setData] = useState<Order | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!id) {
+            setData(null);
+            setLoading(false);
+            return;
+        }
+
+        const instance = axios.create({
+            baseURL: `${import.meta.env.VITE_ORDER_URL}/api`,
+            timeout: 3000,
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        let mounted = true;
+        setLoading(true);
+        instance.get(`/order/${id}`)
+            .then(response => { if (mounted) setData(response.data as Order); })
+            .catch(() => { if (mounted) setData(null); })
+            .finally(() => { if (mounted) setLoading(false); });
+
+        return () => { mounted = false; };
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center">
+                <div className="bg-gray-900 border border-gray-800 rounded-2xl p-10 text-center max-w-md">
+                    <div className="text-yellow-500 text-5xl mb-4">⏳</div>
+                    <h1 className="text-xl font-bold text-white">Lade Bestellung...</h1>
+                    <p className="text-gray-400 mt-2">Bitte einen Moment warten.</p>
+                </div>
+            </div>
+        );
+    }
 
     if (!data) {
         return (
@@ -103,22 +140,4 @@ export default function Order() {
             </div>
         </div>
     );
-}
-
-export async function loader({ params }: { params: Record<string, string> }) {
-    const id = params?.id;
-    if (!id) return null;
-
-    const instance = axios.create({
-        baseURL: 'http://localhost:8081/api',
-        timeout: 3000,
-        headers: { 'Content-Type': 'application/json' }
-    });
-
-    try {
-        const response = await instance.get(`/order/${id}`);
-        return response.data as Order;
-    } catch (err) {
-        return null;
-    }
 }
