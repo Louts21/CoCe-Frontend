@@ -32,7 +32,7 @@ export function Configuration() {
     });
 
     useEffect(() => {
-        instance.get(`${import.meta.env.VITE_CONFIRMATION_URL}/api/configuration`).then(response => {
+        instance.get(`/api/configuration`).then(response => {
             const configData = response.data as Configuration;
             setConfiguration(configData);
             setCar(prev => ({
@@ -59,7 +59,7 @@ export function Configuration() {
     function postOrder() {
         instance({
             method: "post",
-            url: `${import.meta.env.VITE_ORDER_URL}/api/order`,
+            url: `/api/order`,
             data: { ...order, car: car }
         }).then(response => {
             setOrder(response.data as Order);

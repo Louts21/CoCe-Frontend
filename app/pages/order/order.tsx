@@ -16,7 +16,7 @@ export default function Order() {
         }
 
         const instance = axios.create({
-            baseURL: `${import.meta.env.VITE_ORDER_URL}/api`,
+            baseURL: `/api`,
             timeout: 3000,
             headers: { 'Content-Type': 'application/json' }
         });
