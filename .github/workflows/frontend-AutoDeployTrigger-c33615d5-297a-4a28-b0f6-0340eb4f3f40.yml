@@ -37,7 +37,7 @@ jobs:
           appSourcePath: ${{ github.workspace }}
           _dockerfilePathKey_: _dockerfilePath_
           _targetLabelKey_: _targetLabel_
-          registryUrl: 
+          registryUrl: dannistegal.azurecr.io
           registryUsername: ${{ secrets.FRONTEND_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.FRONTEND_REGISTRY_PASSWORD }}
           containerAppName: frontend
