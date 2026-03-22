@@ -294,11 +294,9 @@ export function Configuration() {
                                 {orderSuccess ? (
                                     <div className="text-center">
                                         <div className="text-green-400 font-bold mb-3">✓ Bestellung aufgegeben!</div>
-                                        {order.url.length > 0 && (
-                                            <NavLink to={order.url} className="text-red-400 underline hover:text-red-300 text-sm">
-                                                Bestellung ansehen →
-                                            </NavLink>
-                                        )}
+                                        <NavLink to={`/order/${order.id}`} className="text-red-400 underline hover:text-red-300 text-sm">
+                                            Bestellung ansehen →
+                                        </NavLink>
                                     </div>
                                 ) : (
                                     <button
