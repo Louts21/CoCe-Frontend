@@ -42,7 +42,7 @@ jobs:
           registryPassword: ${{ secrets.FRONTEND_REGISTRY_PASSWORD }}
           containerAppName: frontend
           resourceGroup: CarConfigurator_group
-          imageToBuild: default/[parameters('containerAppName')]:${{ github.sha }}
+          imageToBuild: default/frontend:${{ github.sha }}
           _buildArgumentsKey_: |
             _buildArgumentsValues_
 
